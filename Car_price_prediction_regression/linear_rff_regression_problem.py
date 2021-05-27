@@ -433,3 +433,89 @@ y2 = np.log(y2)
 X_train1,X_test1,y_train1,y_test1 = train_test_split(x2,y2,test_size=0.3,random_state=3)
 
 print(X_train1.shape,X_test1.shape,y_train1.shape,y_test1.shape)
+
+# =============================================================================
+# Baseline model for imputeddata
+# =============================================================================
+
+#here making a base model using test data mean value
+#this is to set a bench mark and to compare with our regression model
+
+
+#finding the mean for test data value
+base_pred= np.mean(y_test1)
+print(base_pred)
+#base_pred 8.068391740519193
+
+#Repeating same value till length oftest data
+
+base_pred = np.repeat(base_pred,len(y_test1))
+
+base_root_mean_square_error_imputed=np.sqrt(mean_squared_error(y_test1,base_pred))
+
+print(base_root_mean_square_error_imputed)
+#base_root_mean_square_error_imputed 1.1884349112889792
+
+# =============================================================================
+# Linear regression with imputed data
+# =============================================================================
+
+#setting intercept astrue
+lgr2=LinearRegression(fit_intercept=True)
+
+#model
+
+model_lin2=lgr2.fit(X_train1,y_train1)
+
+#predicting model on test set
+
+cars_predictions_lin2=lgr2.predict(X_test1)
+
+#computing MSE and RMSE
+
+lin_mse2 = mean_squared_error(y_test1,cars_predictions_lin2)
+lin_rmse2=np.sqrt(lin_mse2)
+print(lin_rmse2)
+# 0.6483956449231307
+
+
+#R squared value
+
+r2_lin_train2=model_lin2.score(X_test1,y_test1)
+r2_lin_test2=model_lin2.score(X_train1,y_train1)
+
+print(r2_lin_test2,r2_lin_train2)
+
+# 0.7071658736894363 0.7023339008631175
+
+
+# =============================================================================
+# Random Forest with Imputed data
+# =============================================================================
+
+
+rf2=RandomForestRegressor(n_estimators=100,max_features='auto',max_depth=100,
+                           min_samples_split=10,min_samples_leaf=4,random_state=1)
+
+#model
+
+model_rf2=rf2.fit(X_train1,y_train1)
+
+#Predicting model on test set
+
+cars_predictions_rf2 = rf2.predict(X_test1)
+
+#Computing MSE and RMSE
+
+rf_mse2=mean_squared_error(y_test1,cars_predictions_rf2)
+rf_rmse2 = np.sqrt(rf_mse2)
+print(rf_rmse2)
+#rmse2 0.494313994408829
+
+
+# R squared value
+r2_rf_test2=model_rf2.score(X_test1,y_test1)
+r2_rf_train2 = model_rf2.score(X_train1,y_train1)
+print(r2_rf_test2,r2_rf_train2)
+
+#0.8269964521311131 0.9024289431669166
